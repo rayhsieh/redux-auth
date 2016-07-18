@@ -27,7 +27,7 @@ module.exports = {
     }, {
       "react": "commonjs react",
       "classnames": "commonjs classnames",
-      "js-cookie": "commonjs js-cookie",
+      "browser-cookies": "commonjs browser-cookies",
       "cookie": "commonjs cookie",
       "extend": "commonjs extend",
       "history": "commonjs history",
@@ -38,6 +38,7 @@ module.exports = {
       "react-dom": "commonjs react-dom",
       "react-redux": "commonjs react-redux",
       "redux": "commonjs redux",
+      "lodash": "commonjs lodash",
       "redux-immutablejs": "commonjs redux-immutablejs",
       "react-router": "commonjs react-router",
       "react-router-redux": "commonjs react-router-redux",
@@ -47,9 +48,18 @@ module.exports = {
       "react-loader": "commonjs react-loader",
       "url": "commonjs url",
       "react-bootstrap": "commonjs react-bootstrap",
-      "material-ui": "commonjs material-ui",
-      "material-ui/lib/styles/colors": "commonjs material-ui/lib/styles/colors",
-      "material-ui/lib/svg-icons": "commonjs material-ui/lib/svg-icons"
+      "material-ui/Dialog": "commonjs material-ui/Dialog",
+      "material-ui/RaisedButton": "commonjs material-ui/RaisedButton",
+      "material-ui/FlatButton": "commonjs material-ui/FlatButton",
+      "material-ui/TextField": "commonjs material-ui/TextField",
+      "material-ui/styles/colors": "commonjs material-ui/styles/colors",
+      "material-ui/styles/MuiThemeProvider": "commonjs material-ui/styles/MuiThemeProvider",
+      "material-ui/svg-icons/action/exit-to-app": "commonjs material-ui/svg-icons/action/exit-to-app",
+      "material-ui/svg-icons/action/favorite": "commonjs material-ui/svg-icons/action/favorite",
+      "material-ui/svg-icons/action/delete": "commonjs material-ui/svg-icons/action/delete",
+      "material-ui/svg-icons/content/send": "commonjs material-ui/svg-icons/content/send",
+      "material-ui/svg-icons/action/lock": "commonjs material-ui/svg-icons/action/lock",
+      "material-ui/svg-icons/alert/error": "commonjs material-ui/svg-icons/alert/error"
     }
   ],
   plugins: [

@@ -52,11 +52,12 @@ export default function() {
       describe(`${theme} theme`, () => {
         describe(`params`, () => {
           it("should accept styling params", done => {
+            let classNameProp = (theme === '/views/bootstrap') ? 'groupClassName' : 'className';
 
             let inputProps = {
-              email: {style: {color: "red"}, className: "email-class-override"},
-              password: {style: {color: "green"}, className: "password-class-override"},
-              passwordConfirmation: {style: {color: "purple"}, className: "password-confirmation-class-override"},
+              email: {style: {color: "red"}, [classNameProp]: "email-class-override"},
+              password: {style: {color: "green"}, [classNameProp]: "password-class-override"},
+              passwordConfirmation: {style: {color: "purple"}, [classNameProp]: "password-confirmation-class-override"},
               submit: {className: "submit-class-override"}
             };
 
@@ -67,9 +68,9 @@ export default function() {
               let passwordEl             = findClass(instance, "password-class-override");
               let passwordConfirmationEl = findClass(instance, "password-confirmation-class-override");
               findClass(instance, "submit-class-override");
-              expect(emailEl.getAttribute("style")).to.match(/color:red/);
-              expect(passwordEl.getAttribute("style")).to.match(/color:green/);
-              expect(passwordConfirmationEl.getAttribute("style")).to.match(/color:purple/);
+              expect(emailEl.getAttribute("style")).to.match(/color:\s?red/);
+              expect(passwordEl.getAttribute("style")).to.match(/color:\s?green/);
+              expect(passwordConfirmationEl.getAttribute("style")).to.match(/color:\s?purple/);
               done();
             }).catch(e => console.log("error:", e));
           });
@@ -192,7 +193,7 @@ export default function() {
               setTimeout(() => {
                 // ensure auth headers were updated
                 let authHeaders = retrieveData(C.SAVED_CREDS_KEY);
-                expect(authHeaders).to.equal(undefined);
+                expect(authHeaders).to.equal(null);
 
                 let errors = store.getState().auth.getIn(["emailSignUp", "default", "errors"]).toJS();
                 expect(errors).to.deep.equal(errorResp["errors"]);

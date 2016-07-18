@@ -4,7 +4,7 @@ import Spinner from "react-loader";
 
 class ButtonLoader extends React.Component {
   static propTypes = {
-    icon: PropTypes.node,
+    icon: PropTypes.any,
     loading: PropTypes.bool,
     spinConfig: PropTypes.object,
     spinColorDark: PropTypes.string,
@@ -37,7 +37,11 @@ class ButtonLoader extends React.Component {
         ? this.props.spinColorDark
         : this.props.spinColorLight;
 
-      icon = <Spinner ref="spinner" {...this.props.spinConfig} color={spinColor} loaded={false} />;
+      icon = (
+        <div>
+          <Spinner ref="spinner" {...this.props.spinConfig} color={spinColor} loaded={false} />
+        </div>
+      );
     } else {
       icon = this.props.icon;
     }

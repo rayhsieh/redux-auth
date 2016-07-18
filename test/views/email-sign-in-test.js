@@ -32,9 +32,11 @@ export default function() {
       describe(`${theme || "default"} theme`, () => {
         describe(`params`, () => {
           it("should accept styling params", done => {
+            let classNameProp = (theme === '/views/bootstrap') ? 'groupClassName' : 'className';
+
             let inputProps = {
-              email: {style: {color: "red"}, className: "email-class-override"},
-              password: {style: {color: "green"}, className: "password-class-override"},
+              email: {style: {color: "red"}, [classNameProp]: "email-class-override"},
+              password: {style: {color: "green"}, [classNameProp]: "password-class-override"},
               submit: {style: {color: "orange"}, className: "submit-class-override"}
             };
 
@@ -44,8 +46,8 @@ export default function() {
               let emailEl    = findClass(instance, "email-class-override");
               let passwordEl = findClass(instance, "password-class-override");
               findClass(instance, "submit-class-override");
-              expect(emailEl.getAttribute("style")).to.match(/color:red/);
-              expect(passwordEl.getAttribute("style")).to.match(/color:green/);
+              expect(emailEl.getAttribute("style")).to.match(/color:\s?red/);
+              expect(passwordEl.getAttribute("style")).to.match(/color:\s?green/);
               done();
             }).catch(e => console.log("error:", e));
           });
@@ -103,6 +105,7 @@ export default function() {
             var testEmail    = "test@test.com";
             var testPassword = "test@test.com";
             var apiUrl       = "http://api.dev";
+            var nextSpy      = spy();
 
             successRespSpy = spy(() => ({data: {uid: testUid}}));
 
@@ -111,7 +114,7 @@ export default function() {
               .reply(200, successRespSpy, successRespHeaders);
 
             renderConnectedComponent((
-              <EmailSignInForm />
+              <EmailSignInForm next={nextSpy} />
             ), {apiUrl}).then(({instance, store}) => {
               // find inputs
               let emailEl = TestUtils.scryRenderedDOMComponentsWithTag(instance, "input")[0];
@@ -153,6 +156,9 @@ export default function() {
                 expect(store.getState().auth.getIn(["configure", "currentEndpointKey"])).to.equal("default");
                 expect(getCurrentEndpointKey()).to.equal("default");
 
+                // ensure `next` method was called
+                expect(nextSpy.called).to.be.ok;
+
                 done();
               }, 100);
             }).catch(e => console.log("errors", e));
@@ -163,6 +169,7 @@ export default function() {
         describe(`error`, () => {
           it("should handle failed sign in", done => {
             var apiUrl = "http://api.dev";
+            var nextSpy = spy();
 
             errorRespSpy = spy(() => errorResp);
 
@@ -171,7 +178,7 @@ export default function() {
               .reply(401, errorRespSpy);
 
             renderConnectedComponent(
-              <EmailSignInForm />, {apiUrl}
+              <EmailSignInForm next={nextSpy} />, {apiUrl}
             ).then(({instance, store}) => {
               // submit the form
               let formEl = TestUtils.findRenderedDOMComponentWithClass(instance, "email-sign-in-form");
@@ -183,7 +190,7 @@ export default function() {
 
                 // ensure auth headers were updated
                 let authHeaders = retrieveData(C.SAVED_CREDS_KEY);
-                expect(authHeaders).to.equal(undefined);
+                expect(authHeaders).to.equal(null);
 
                 let errors = store.getState().auth.getIn(["emailSignIn", "default", "errors"]).toJS();
                 expect(errors).to.deep.equal(errorResp);
@@ -194,6 +201,9 @@ export default function() {
 
                 let modalVisible = store.getState().auth.getIn(["ui", "emailSignInErrorModalVisible"]);
                 expect(modalVisible).to.equal(true);
+
+                // ensure `next` method was not called
+                expect(nextSpy.called).to.equal(false);
 
                 done();
               }, 100);

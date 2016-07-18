@@ -11,6 +11,9 @@ import jsdomify from "jsdomify";
 
 
 var findClass = (className) => document.getElementsByClassName(className)[0],
+    findButtonWithType = (type) => [].slice.call(document.getElementsByTagName("button")).filter(el => {
+      return el.getAttribute("type") === type;
+    })[0],
     findTag = (tagName, i) => document.getElementsByTagName(tagName)[i],
     requirePath,
     successRespSpy,
@@ -80,9 +83,11 @@ export default function() {
           it("should accept styling params", done => {
             wipeout();
 
+            let classNameProp = (theme === 'bootstrap') ? 'groupClassName' : 'className';
+
             let inputProps = {
-              password: {className: "password-class-override"},
-              passwordConfirmation: {className: "password-confirmation-class-override"},
+              password: {[classNameProp]: "password-class-override"},
+              passwordConfirmation: {[classNameProp]: "password-confirmation-class-override"},
               submit: {className: "submit-class-override"}
             };
 
@@ -131,7 +136,7 @@ export default function() {
               TestUtils.Simulate.change(passwordConfirmationEl);
 
               // submit changed password
-              let submitEl = findClass("password-reset-success-modal-submit");
+              let submitEl = findButtonWithType("submit");
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
@@ -177,7 +182,7 @@ export default function() {
               expect(store.getState().auth.getIn(["updatePasswordModal", "default", "form", "password_confirmation"])).to.equal(testPassword);
 
               // submit the form
-              let submitEl = findClass("password-reset-success-modal-submit");
+              let submitEl = findButtonWithType("submit");
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
@@ -219,7 +224,7 @@ export default function() {
               TestUtils.Simulate.change(passwordEl);
 
               // submit the form
-              let submitEl = findClass("password-reset-success-modal-submit");
+              let submitEl = findButtonWithType("submit");
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {

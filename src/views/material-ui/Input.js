@@ -1,8 +1,9 @@
 import React, {PropTypes} from "react";
-import Colors from "material-ui/lib/styles/colors";
-import {TextField} from "material-ui";
-import {AlertError} from "material-ui/lib/svg-icons";
+import * as Colors from "material-ui/styles/colors";
+import TextField from "material-ui/TextField";
+import AlertError from "material-ui/svg-icons/alert/error";
 import Immutable from "immutable";
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class AuthInput extends React.Component {
   static propTypes = {
@@ -51,11 +52,14 @@ class AuthInput extends React.Component {
 
   render () {
     return (
-      <TextField
-        fullWidth={true}
-        {...this.props}
-        errorText={this.renderErrorList()}
-        onChange={this.handleInput.bind(this)} />
+      <MuiThemeProvider>
+        <TextField
+          fullWidth={true}
+          id={this.props.className}
+          {...this.props}
+          errorText={this.renderErrorList()}
+          onChange={this.handleInput.bind(this)} />
+      </MuiThemeProvider>
     );
   }
 }

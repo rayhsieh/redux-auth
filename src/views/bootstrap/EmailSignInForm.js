@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 class EmailSignInForm extends React.Component {
   static propTypes = {
     endpoint: PropTypes.string,
+    next: PropTypes.func,
     inputProps: PropTypes.shape({
       email: PropTypes.object,
       password: PropTypes.object,
@@ -16,6 +17,7 @@ class EmailSignInForm extends React.Component {
   };
 
   static defaultProps = {
+    next: () => {},
     inputProps: {
       email: {},
       password: {},
@@ -38,7 +40,9 @@ class EmailSignInForm extends React.Component {
   handleSubmit (event) {
     event.preventDefault();
     let formData = this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "form"]).toJS();
-    this.props.dispatch(emailSignIn(formData, this.getEndpoint()));
+    this.props.dispatch(emailSignIn(formData, this.getEndpoint()))
+      .then(this.props.next)
+      .catch(() => {});
   }
 
   render () {
@@ -51,7 +55,7 @@ class EmailSignInForm extends React.Component {
       <form className='redux-auth email-sign-in-form clearfix'
             onSubmit={this.handleSubmit.bind(this)}>
         <Input type="text"
-               className="email-sign-in-email"
+               groupClassName="email-sign-in-email"
                label="Email"
                placeholder="Email"
                disabled={disabled}
@@ -62,7 +66,7 @@ class EmailSignInForm extends React.Component {
 
         <Input type="password"
                label="Password"
-               className="email-sign-in-password"
+               groupClassName="email-sign-in-password"
                placeholder="Password"
                disabled={disabled}
                value={this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "form", "password"])}

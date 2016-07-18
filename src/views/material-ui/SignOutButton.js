@@ -1,17 +1,19 @@
 import React, { PropTypes } from "react";
 import ButtonLoader from "./ButtonLoader";
-import { ActionLock } from "material-ui/lib/svg-icons";
+import ActionLock from "material-ui/svg-icons/action/lock";
 import { connect } from "react-redux";
 import { signOut } from "redux-auth/actions/sign-out";
 
 class SignOutButton extends React.Component {
   static propTypes = {
+    next: PropTypes.func,
     endpoint: PropTypes.string,
     children: PropTypes.node,
     icon: PropTypes.func
   };
 
   static defaultProps = {
+    next: () => {},
     children: <span>Sign Out</span>,
     icon: ActionLock
   };
@@ -25,7 +27,9 @@ class SignOutButton extends React.Component {
   }
 
   handleClick () {
-    this.props.dispatch(signOut(this.getEndpoint()));
+    this.props.dispatch(signOut(this.getEndpoint()))
+      .then(this.props.next)
+      .catch(() => {});
   }
 
   render () {

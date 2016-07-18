@@ -66,7 +66,7 @@ export default function() {
               store.dispatch(storeCurrentEndpointKey("alt"));
               persistData(C.SAVED_CONFIG_KEY, "alt");
 
-              let submitEl = findClass(instance, "sign-out-submit");
+              let submitEl = TestUtils.findRenderedDOMComponentWithTag(instance, "button");
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
@@ -80,7 +80,7 @@ export default function() {
         });
 
         describe("success", () => {
-          it("should handle successful account destruction", done => {
+          it("should handle successful sign out", done => {
             var apiUrl    = "http://api.dev";
 
             successRespSpy = spy(() => [200, successResp]);
@@ -89,11 +89,13 @@ export default function() {
               .delete("/auth/sign_out")
               .reply(successRespSpy);
 
+            const nextSpy = spy();
+
             renderConnectedComponent((
-              <SignOutButton />
+              <SignOutButton next={nextSpy} />
             ), {apiUrl}, {user: {isSignedIn: true}}).then(({instance, store}) => {
               // submit the form
-              let submitEl = findClass(instance, "sign-out-submit");
+              let submitEl = TestUtils.findRenderedDOMComponentWithTag(instance, "button");
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
@@ -107,6 +109,9 @@ export default function() {
                 let isSignedIn = store.getState().auth.getIn(["user", "isSignedIn"]);
                 expect(isSignedIn).to.equal(false);
 
+                // ensure `next` method was called
+                expect(nextSpy.called).to.be.ok;
+
                 done();
               }, 100);
             }).catch(e => console.log("errors", e));
@@ -114,24 +119,26 @@ export default function() {
         });
 
         describe("error", () => {
-          it("should handle failed account destruction", done => {
+          it("should handle failed sign out", done => {
             var apiUrl = "http://api.dev";
 
             errorRespSpy = spy(() => [401, errorResp]);
+
+            const nextSpy = spy();
 
             nock(apiUrl)
               .delete("/auth/sign_out")
               .reply(errorRespSpy);
 
             renderConnectedComponent(
-              <SignOutButton />, {apiUrl}, {user: {isSignedIn: true}}
+              <SignOutButton next={nextSpy} />, {apiUrl}, {user: {isSignedIn: true}}
             ).then(({instance, store}) => {
               // establish that we're using the "default" endpoint config
               store.dispatch(storeCurrentEndpointKey("default"));
               persistData(C.SAVED_CONFIG_KEY, "default");
 
               // submit the form
-              let submitEl = TestUtils.findRenderedDOMComponentWithClass(instance, "sign-out-submit");
+              let submitEl = TestUtils.findRenderedDOMComponentWithTag(instance, "button");
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
@@ -148,7 +155,10 @@ export default function() {
                 expect(isSignedIn).to.equal(false);
 
                 let creds = retrieveData(C.SAVED_CREDS_KEY);
-                expect(creds).to.equal(undefined);
+                expect(creds).to.equal(null);
+
+                // ensure `next` method was not called
+                expect(nextSpy.called).to.equal(false);
 
                 done();
               }, 100);

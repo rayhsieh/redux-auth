@@ -1,7 +1,7 @@
 import React from "react";
-import Colors from "material-ui/lib/styles/colors";
-import { hideOAuthSignInErrorModal } from "redux-auth/actions/ui";
-import {AlertError} from "material-ui/lib/svg-icons";
+import * as Colors from "material-ui/styles/colors";
+import { hideOAuthSignInErrorModal } from "../../../actions/ui";
+import AlertError from "material-ui/svg-icons/alert/error";
 import Modal from "./Modal";
 
 class OAuthSignInErrorModal extends React.Component {

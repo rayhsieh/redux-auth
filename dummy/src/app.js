@@ -4,7 +4,7 @@ import {Route, IndexRoute} from "react-router";
 import {configure, authStateReducer} from "../../src";
 import {createStore, compose, applyMiddleware} from "redux";
 import {Router, createMemoryHistory, browserHistory} from "react-router";
-import {routeReducer, syncHistory} from "react-router-redux";
+import { routerReducer, syncHistoryWithStore } from "react-router-redux";
 import {combineReducers} from "redux";
 import demoButtons from "./reducers/request-test-buttons";
 import demoUi from "./reducers/demo-ui";
@@ -26,63 +26,48 @@ class App extends React.Component {
   }
 }
 
+function requireAuth (store, nextState, replace, next) {
+  if (!store.getState().auth.getIn(["user", "isSignedIn"])) {
+    replace("/login");
+  }
+  next();
+}
+
 export function initialize({cookies, isServer, currentLocation, userAgent} = {}) {
-  var reducer = combineReducers({
-    auth:   authStateReducer,
-    routing: routeReducer,
+  const reducer = combineReducers({
+    auth: authStateReducer,
+    routing: routerReducer,
     demoButtons,
     demoUi
   });
 
-  var store;
-
-  // access control method, used above in the "account" route
-  var requireAuth = (nextState, transition, cb) => {
-    // the setTimeout is necessary because of this bug:
-    // https://github.com/rackt/redux-router/pull/62
-    // this will result in a bunch of warnings, but it doesn't seem to be a serious problem
-    setTimeout(() => {
-      if (!store.getState().auth.getIn(["user", "isSignedIn"])) {
-        transition(null, "/login");
-      }
-      cb();
-    }, 0);
-  };
-
-  // define app routes
-  var routes = (
-    <Route path="/" component={App}>
-      <IndexRoute component={Main} />
-      <Route path="login" component={SignIn} />
-      <Route path="account" component={Account} onEnter={requireAuth} />
-    </Route>
-  );
-
-  // these methods will differ from server to client
-  var history = browserHistory;
-  if (isServer) {
-    history = createMemoryHistory(currentLocation);
-  }
-
-  var reduxRouterMiddleware = syncHistory(history)
-
   // create the redux store
-  store = createStore(
+  const store = createStore(
     reducer,
     compose(
-      applyMiddleware(
-        thunk,
-        reduxRouterMiddleware
-      ),
-      typeof(window) !== "undefined" && window.devToolsExtension
-        ? window.devToolsExtension()
-        : f => f
+      applyMiddleware(thunk)
     )
   );
 
-  // Required for replaying actions from devtools to work
-  reduxRouterMiddleware.listenForReplays(store);
+  let history = (isServer)
+    ? createMemoryHistory(currentLocation)
+    : browserHistory;
 
+  history = syncHistoryWithStore(history, store);
+
+  // define app routes
+  var routes = (
+    <Router history={history}>
+      <Route path="/" component={App}>
+        <IndexRoute component={Main} />
+        <Route path="login" component={SignIn} />
+        <Route
+          path="account"
+          component={Account}
+          onEnter={requireAuth.bind(this, store)} />
+      </Route>
+    </Router>
+  );
 
   /**
    * The React Router 1.0 routes for both the server and the client.
@@ -128,9 +113,7 @@ export function initialize({cookies, isServer, currentLocation, userAgent} = {})
       routes,
       redirectPath,
       provider: (
-        <Provider store={store} key="provider">
-          <Router routes={routes} history={history} />
-        </Provider>
+        <Provider store={store} key="provider" children={routes} />
       )
     });
   });
