@@ -113,7 +113,11 @@ export function configure(endpoint={}, settings={}) {
       let {authRedirectPath, authRedirectHeaders} = getRedirectInfo(window.location);
 
       if (authRedirectPath) {
-        dispatch(push({pathname: authRedirectPath}));
+        // dispatch(push({pathname: authRedirectPath}));
+        dispatch(push({
+          pathname: window.location.pathname,
+          search: window.location.search,
+        }));
       }
 
       if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders["access-token"]) {
