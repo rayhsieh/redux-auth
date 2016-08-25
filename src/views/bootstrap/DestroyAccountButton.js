@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import ButtonLoader from './ButtonLoader';
-import { destroyAccount } from 'redux-auth/actions/destroy-account';
+import { destroyAccount } from '../../actions/destroy-account';
 import { connect } from 'react-redux';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 
@@ -32,17 +32,17 @@ class DestroyAccountButton extends React.Component {
     let disabled = !this.props.auth.getIn(['user', 'isSignedIn']);
     return (
       <ButtonLoader
-        loading={this.props.auth.getIn(['destroyAccount', this.getEndpoint(), 'loading'])}
-        icon={this.props.icon}
-        disabled={disabled}
-        className="destroy-account-submit"
-        onClick={this.handleClick.bind(this)}
-        {...this.props}
+      loading={this.props.auth.getIn(['destroyAccount', this.getEndpoint(), 'loading'])}
+      icon={this.props.icon}
+      disabled={disabled}
+      className="destroy-account-submit"
+      onClick={this.handleClick.bind(this)}
+      {...this.props}
       />
       );
   }
 }
 
-export default connect(({ auth }) => ({
+export default connect(({auth}) => ({
   auth,
 }))(DestroyAccountButton);

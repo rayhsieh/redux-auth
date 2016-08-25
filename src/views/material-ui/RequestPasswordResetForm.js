@@ -6,7 +6,7 @@ import ContentSend from "material-ui/svg-icons/content/send";
 import {
   requestPasswordResetFormUpdate,
   requestPasswordReset
-} from "redux-auth/actions/request-password-reset";
+} from "../../actions/request-password-reset";
 
 class RequestPasswordResetForm extends React.Component {
   static propTypes = {
