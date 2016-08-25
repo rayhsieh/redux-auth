@@ -1,5 +1,5 @@
 import React, { PropTypes } from "react";
-import { Glyphicon } from "react-bootstrap";
+import Glyphicon from "react-bootstrap/lib/Glyphicon";
 import Immutable from "immutable";
 
 class ErrorList extends React.Component {

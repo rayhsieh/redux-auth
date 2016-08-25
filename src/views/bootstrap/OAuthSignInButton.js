@@ -1,7 +1,7 @@
 import React, { PropTypes } from "react";
 import { connect } from "react-redux";
 import ButtonLoader from "./ButtonLoader";
-import { Glyphicon } from "react-bootstrap";
+import Glyphicon from "react-bootstrap/lib/Glyphicon";
 import { oAuthSignIn as _oAuthSignIn } from "redux-auth/actions/oauth-sign-in";
 
 // hook for rewire

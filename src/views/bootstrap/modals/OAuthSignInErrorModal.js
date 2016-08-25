@@ -1,5 +1,5 @@
 import React from "react";
-import { Glyphicon } from "react-bootstrap";
+import Glyphicon from "react-bootstrap/lib/Glyphicon";
 import Modal from "./Modal";
 import { hideOAuthSignInErrorModal } from "redux-auth/actions/ui";
 

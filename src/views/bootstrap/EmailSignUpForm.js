@@ -3,7 +3,7 @@ import Input from "./Input";
 import ButtonLoader from "./ButtonLoader";
 import { emailSignUpFormUpdate, emailSignUp } from "redux-auth/actions/email-sign-up";
 import { connect } from "react-redux";
-import { Glyphicon } from "react-bootstrap";
+import Glyphicon from "react-bootstrap/lib/Glyphicon";
 
 class EmailSignUpForm extends React.Component {
   static propTypes = {

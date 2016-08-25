@@ -2,7 +2,7 @@ import React, {PropTypes} from "react";
 import ButtonLoader from "./ButtonLoader";
 import Input from "./Input";
 import { emailSignInFormUpdate, emailSignIn } from "redux-auth/actions/email-sign-in";
-import { Glyphicon } from "react-bootstrap";
+import Glyphicon from "react-bootstrap/lib/Glyphicon";
 import { connect } from "react-redux";
 
 class EmailSignInForm extends React.Component {

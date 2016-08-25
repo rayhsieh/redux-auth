@@ -1,7 +1,7 @@
 import React, { PropTypes } from "react";
 import Input from "./Input";
 import ButtonLoader from "./ButtonLoader";
-import { Glyphicon } from "react-bootstrap";
+import Glyphicon from "react-bootstrap/lib/Glyphicon";
 import { updatePassword, updatePasswordFormUpdate } from "redux-auth/actions/update-password";
 import { connect } from "react-redux";
 

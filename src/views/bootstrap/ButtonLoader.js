@@ -1,5 +1,6 @@
 import React, { PropTypes } from "react";
-import { Button, Glyphicon } from "react-bootstrap";
+import Glyphicon from 'react-bootstrap/lib/Glyphicon';
+import Button from 'react-bootstrap/lib/Button';
 import Spinner from "react-loader";
 
 class ButtonLoader extends React.Component {
@@ -29,7 +30,7 @@ class ButtonLoader extends React.Component {
     style: {}
   };
 
-  renderIcon () {
+  renderIcon() {
     let icon;
 
     if (this.props.loading) {
@@ -57,22 +58,22 @@ class ButtonLoader extends React.Component {
       }}>
         {icon}
       </div>
-    );
+      );
   }
 
-  render () {
+  render() {
     return (
       <Button
-        onClick={this.props.onClick}
-        disabled={this.props.disabled || this.props.loading}
-        bsStyle={this.props.bsStyle}
-        className={this.props.className}
-        type={this.props.type}
-        style={this.props.style}
-        bsSize={this.props.bsSize}>
+      onClick={this.props.onClick}
+      disabled={this.props.disabled || this.props.loading}
+      bsStyle={this.props.bsStyle}
+      className={this.props.className}
+      type={this.props.type}
+      style={this.props.style}
+      bsSize={this.props.bsSize}>
         {this.renderIcon()} {this.props.children}
       </Button>
-    );
+      );
   }
 }
 
